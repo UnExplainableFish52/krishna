@@ -1,4 +1,3 @@
-// Animate skill bars when in viewport
 document.addEventListener('DOMContentLoaded', () => {
   const skillLevels = document.querySelectorAll('.skill-level');
   function animateSkills() {
@@ -16,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const contactForm = document.getElementById('contactForm');
   contactForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    // Simple validation
     let valid = true;
     this.querySelectorAll('input, textarea').forEach(el => {
       if (!el.value.trim()) valid = false;
@@ -28,10 +26,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // Success animation
     this.reset();
-    this.querySelector('button').textContent = 'Sent!';
+    // Show thank you message
+    let thankYou = document.createElement('div');
+    thankYou.textContent = 'Thank you for reaching out! Your message has been sent.';
+    thankYou.className = 'thank-you-message';
+    thankYou.style.cssText = `
+      background: #f9b234;
+      color: #fff;
+      padding: 1.2em;
+      border-radius: 12px;
+      margin: 1em auto;
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 500;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      animation: fadeIn 1s;
+    `;
+    this.parentNode.insertBefore(thankYou, this.nextSibling);
     setTimeout(() => {
-      this.querySelector('button').textContent = 'Send Message';
-    }, 1800);
+      thankYou.remove();
+    }, 3500);
+    this.querySelector('button').textContent = 'Send Message';
   });
 
   // Smooth scroll for nav links
@@ -41,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (target) {
         e.preventDefault();
         target.scrollIntoView({behavior:'smooth', block:'start'});
-        // Close mobile nav if exists (expandable menu logic can be added here)
       }
     });
   });
@@ -105,16 +119,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
   let lastMouse = { x: mouse.x, y: mouse.y };
-  // Animate trailing
   function renderTrail() {
     let x = mouse.x, y = mouse.y;
     for (let i = 0; i < trailDots.length; i++) {
       const dot = trailDots[i];
-      // Smoothly interpolate positions for trailing effect
       lastMouse.x += (x - lastMouse.x) * 0.2;
       lastMouse.y += (y - lastMouse.y) * 0.2;
       dot.style.transform = `translate3d(${lastMouse.x - (i*6)}px,${lastMouse.y - (i*6)}px,0) scale(${1 - i*0.03})`;
-      // Fade out on last dots
       dot.style.opacity = `${0.8 - i * 0.04}`;
       x = lastMouse.x;
       y = lastMouse.y;
@@ -122,12 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(renderTrail);
   }
   renderTrail();
-  // Update mouse position
   window.addEventListener('mousemove', (e) => {
     mouse.x = e.clientX;
     mouse.y = e.clientY;
   });
-  // Optional: burst effect on click
   window.addEventListener('mousedown', () => {
     trailDots.forEach((dot, i) => {
       dot.style.background = colors[(i+1) % colors.length];
@@ -138,7 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 200 + i*10);
     });
   });
-  // Hide cursor on input/textareas for usability
   const hideTrail = () => trailDots.forEach(dot => dot.style.opacity = 0);
   const showTrail = () => trailDots.forEach((dot, i) => dot.style.opacity = `${0.8 - i * 0.04}`);
   document.querySelectorAll('input, textarea, button').forEach(el => {
